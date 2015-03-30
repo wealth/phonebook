@@ -1,0 +1,10 @@
+/* CSS declarations go here */
+.control-label,
+.city-name{
+	display: inline-block;
+	width: 200px;
+}
+.record{
+	display: inline-block;
+	width: 600px;
+}

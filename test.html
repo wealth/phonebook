@@ -1,0 +1,90 @@
+<head>
+	<title>Phone Book</title>
+</head>
+
+<body>
+	<div>
+		{{> hello}}
+		<div class="container">
+		</div>
+  	</div>
+</body>
+
+<template name="hello">
+	<div class="navbar navbar-default" role="navigation">
+		<div class="container">
+		    <div class="navbar-header">
+		        <a class="navbar-brand" href="/">Phone Book</a>
+		        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+		            <span class="sr-only">Toggle navigation</span>
+		            <span class="icon-bar"></span>
+		            <span class="icon-bar"></span>
+		            <span class="icon-bar"></span>
+		        </button>
+		    </div>
+		    <div class="navbar-collapse collapse">
+		        <ul class="nav navbar-nav">
+		            <li class="{{ activeIfRouteIs '/' }}"><a href="/">Home</a></li>
+		            {{#if currentUser }}
+		            	<li class="{{ activeIfRouteIs '/records' }}"><a href="/records">My Records</a></li>
+		            {{/if}}
+		            <li class="{{ activeIfRouteIs '/cities' }}"><a href="/cities">Admin: Cities</a></li>
+		            <li class="{{ activeIfRouteIs '/streets' }}"><a href="/streets">Admin: Streets</a></li>		            
+		        </ul>
+		        <ul class="nav navbar-nav navbar-right">
+		            {{> loginButtons}}
+		        </ul>
+		    </div>
+	    </div>
+	</div>
+</template>
+
+<template name="main">
+	<div class="container">
+		{{> yield }}
+	</div>
+</template>
+
+<template name="noAuth">
+	<center>
+		<h1>Hello! In order to use phonebook you need to sign in or register!</h1>
+	</center>
+</template>
+
+<template name="newRecord">
+	<h1>Add record {{record.name}}</h1>
+	{{> quickForm collection="Records" id="insertRecordForm" type="insert"}}
+</template>
+
+<template name="editRecord">
+	<h1>Edit record: {{record.name}}</h1>
+	{{> quickForm collection="Records" doc=record id="updateRecordForm" type="update"}}
+</template>
+
+<template name="cities">
+	{{> quickForm collection="Cities" id="insertCityForm" type="insert"}}
+	<ul>
+		{{#each cities}}
+			<li><span class="city-name">{{this.name}}</span> {{> quickRemoveButton collection="Cities" _id=this._id}}</li>
+		{{/each}}
+	</ul>
+</template>
+
+<template name="streets">
+	{{> quickForm collection="Streets" id="insertStreetForm" type="insert"}}
+	<ul>
+		{{#each streets}}
+			<li><span class="city-name">{{this.name}} form {{ getCityName  this.cityID }}</span> {{> quickRemoveButton collection="Streets" _id=this._id}}</li>
+		{{/each}}
+	</ul>
+</template>
+
+<template name="records">
+	<ul>
+		{{#each records}}
+			<li><span class="record">{{this.name}} {{this.secondname}} {{this.surname}} (BD: {{ formatBirthday this.birthdate }}) from {{ getCityName this.city }} - {{ getStreetName this.street }}: {{ this.phone }}</span> <a href="/records/{{this._id}}/edit">Edit</a> {{> quickRemoveButton collection="Records" _id=this._id}}</li>
+		{{else}}
+			<h1>No recrods yet! Add some <a href="/">here</a>.</h1>
+		{{/each}}
+	</ul>
+</template>
